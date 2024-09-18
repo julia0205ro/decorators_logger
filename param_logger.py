@@ -1,21 +1,22 @@
 import os
+import datetime
 
 
 def logger(path):
 
     def __logger(old_function):
-        import datetime
-        import logging
 
         def new_function(*args, **kwargs):
             date_time_function_call = datetime.datetime.now()
             result = old_function(*args, **kwargs)
-            # print(path)
-            logging.basicConfig(filename=path, level=logging.INFO)
-            logging.info(f'Имя функции: {old_function.__name__} '
-                         f'\n Аргументы функции: {args} и {kwargs} '
-                         f'\n Дата и время вызова функции: {date_time_function_call} '
-                         f'\n Возвращаемое значение: {result} \n')
+            with open(path, 'a+', encoding='Windows-1251') as file:
+                func_name = old_function.__name__
+                text = ('Имя функции: {} \n '
+                        'Аргументы функции: {} и {} \n '
+                        'Дата и время вызова функции: {} \n '
+                        'Возвращаемое значение: {} \n').format(
+                    func_name, args, kwargs, date_time_function_call, result)
+                file.write(text)
             return result
 
         return new_function
